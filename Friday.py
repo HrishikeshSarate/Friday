@@ -21,6 +21,7 @@ from tkinter import scrolledtext
 import pywhatkit
 import playsound
 from PIL import ImageTk, Image
+import subprocess
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 # print(voices[1].id)
@@ -30,6 +31,19 @@ engine.setProperty('voice', voices[1].id)
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
+
+class note:
+    def Note(self,data):
+        date=datetime.datetime.now()
+        filename=str(date).replace(':','-')+'-note.txt'
+        a=os.getcwd()
+        if not os.path.exists('Notes'):
+            os.mkdir('Notes')
+        os.chdir(a+r'\Notes')
+        with open(filename,'w') as f:
+            f.write(data)
+        subprocess.Popen(['notepad.exe',filename])
+        os.chdir(a)
 
 
 def there_exists(terms, query):
@@ -124,6 +138,11 @@ def mainframe():
 
             elif 'open stack overflow' in query:
                 webbrowser.open("stackoverflow.com")
+            
+            elif 'open gmail' in query:
+                webbrowser.open("gmail.com")
+            
+            
 
             elif 'play music' in query:
                 music_dir = 'D:\\AI songs'
@@ -132,24 +151,83 @@ def mainframe():
                 la = random.randint(0, 18)
                 os.startfile(os.path.join(music_dir, songs[la]))
 
+            elif 'open chrome'in query:
+                speak("Opening chrome")
+                os.startfile(r'C:\Program Files\Google\Chrome\Application\chrome.exe')
+                
             elif 'the time' in query:
                 strTime = datetime.datetime.now().strftime("%H:%M:%S")
                 speak(f"Sir, the thime is{strTime}")
+
+            elif there_exists(['open file manager','file manager','open my computer','my computer','open file explorer','file explorer','open this pc','this pc'],query):
+                speak("Opening File Explorer")
+                os.startfile("C:\\Windows\\explorer.exe")
+                
+            elif there_exists(['powershell'],query):
+                speak("Opening powershell")
+                os.startfile(r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe')
+                
+            elif there_exists(['cmd','command prompt','command prom','commandpromt',],query):
+                speak("Opening command prompt")
+                os.startfile(r'C:\Windows\System32\cmd.exe')
+                
+            # elif there_exists(['open whatsapp'],query):
+            #     speak("Opening whatsApp")
+            #     os.startfile(r'C:\Users\Vishal\AppData\Local\WhatsApp\WhatsApp.exe')
+            #     break
+            elif there_exists(['open settings','open control panel','open this computer setting Window','open computer setting Window'   ,'open computer settings','open setting','show me settings','open my computer settings'],query):
+                speak("Opening settings...")
+                os.startfile('C:\\Windows\\System32\\control.exe')
+                break
 
             elif 'open code' in query:
                 speak("opening visual studio code")
                 codePath = "D:\\Microsoft VS Code\\Code.exe"
                 os.startfile(codePath)
 
-            elif 'play on' in query:
+            elif 'rock on' in query:
                 speak("opening miles morales")
                 codePath = "E:\\Marvels SpiderMan Miles Morales\\MilesMorales.exe"
+                os.startfile(codePath)
+            
+            elif 'open firefox' in query:
+                speak("opening firefox")
+                codePath = "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+                os.startfile(codePath)
+
+            elif 'powershell' in query:
+                speak("opening Powershell")
+                codePath = "C:\\Users\\sarat\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Windows PowerShell\\powershell.exe"
                 os.startfile(codePath)
 
             elif 'game on' in query:
                 speak("opening spiderman")
                 codePath = "D:\\Marvel's Spider-Man Remastered\\Spider-Man.exe"
                 os.startfile(codePath)
+            
+            elif there_exists(['make a note','take note','take a note','note it down','make note','remember this as note','open notepad and write'],query):
+                speak("What would you like to write down?")
+                data=takeCommand()
+                n= note()
+                n.Note(data)
+                speak("I have a made a note of that.")
+                break
+
+            elif there_exists(["toss a coin","flip a coin","toss"],query):
+                moves=["head", "tails"]
+                cmove=random.choice(moves)
+                playsound.playsound('quarter spin flac.mp3')
+                speak("It's " + cmove)
+                break
+
+            elif there_exists(['the time'],query):
+                strTime =datetime.datetime.now().strftime("%H:%M:%S")
+                speak(f"Sir, the time is {strTime}")
+            elif there_exists(['the date'],query):
+                strDay=datetime.date.today().strftime("%B %d, %Y")
+                speak(f"Today is {strDay}")
+            elif there_exists(['what day it is','what day is today','which day is today',"today's day name please"],query):
+                speak(f"Today is {datetime.datetime.now().strftime('%A')}")
 
             elif there_exists(['open youtube and play', 'on youtube'], query):
                 if 'on youtube' in query:
@@ -182,7 +260,7 @@ if __name__ == "__main__":
                   2 - 745/2), int(root.winfo_screenheight()/2 - 360/2)))
     root.resizable(0, 0)
     root.title("Friday")
-    root.iconbitmap('Heisenberg.ico')
+    root.iconbitmap('Friday.ico')
     root.configure(bg='#2c4557')
     scrollable_text = scrolledtext.ScrolledText(
         root, state='disabled', height=15, width=87, relief='sunken', bd=5, wrap=tk.WORD, bg='#add8e6', fg='#800000')
